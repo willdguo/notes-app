@@ -1,0 +1,29 @@
+{
+  "notes": [
+    {
+      "title": "New Note 1",
+      "content": "This note was stored in db.json\n\nplan for today:\n!! working on local database\nexpand to xpress database\nmove to MongoDB",
+      "id": 1
+    },
+    {
+      "title": "Testng this note title change",
+      "content": "YLEZOGOGG",
+      "id": 2
+    },
+    {
+      "title": "Ok somethig sn't rignt",
+      "content": "adfasdf m hwe th hehehha h\nok let's see if this works\n",
+      "id": 3
+    },
+    {
+      "title": "New Note",
+      "content": "What's up?\ntesting to see if the issue is storage\n",
+      "id": 4
+    },
+    {
+      "title": "New Note",
+      "content": "well this is concerning i t is concerning that i can't make changes to things in the past\n\ndamn   \n\nso it seems that the issue is indeed storage",
+      "id": 5
+    }
+  ]
+}

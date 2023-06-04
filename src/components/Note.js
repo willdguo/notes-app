@@ -1,3 +1,5 @@
+import getNotes from "../services/getNotes"
+
 const Note = ( { notes, setNotes, id }) => {
 
     function getById(id) {
@@ -20,19 +22,30 @@ const Note = ( { notes, setNotes, id }) => {
 
     function changeContent(e) {
         const newContent = e.target.value
-        console.log(`new content: ${newContent}`)
+        //console.log(`new content: ${newContent}`)
     
         const currNote = getById(id)
-        setNotes(notes.filter(note => note.id !== id).concat({...currNote, content: newContent}))
+        const updatedNote = {...currNote, content: newContent}
+
+        getNotes
+            .update(id, {...currNote, content: newContent})
+            .then(response => {
+                setNotes(notes.filter(note => note.id !== id).concat(updatedNote))
+            })
+
       }
     
       function changeTitle(e) {
-        const newTitle = e.target.value // ? e.target.value : `New Note ${id}` // fix this somehow - empty titles should not be allowed
-        console.log(`new title: ${newTitle}`)
-    
-        let currNote = getById(id) 
+        const newTitle = e.target.value // ? e.target.value : `New Note ${id}` // empty titles should not be allowed
+        // console.log(`new title: ${newTitle}`)
+        const currNote = getById(id) 
+        const updatedNote = {...currNote, title: newTitle}
         //console.log(notes.filter(note => id !== note.id).concat({...currNote, title: e.target.value}))
-        setNotes(notes.filter(note => id !== note.id).concat({...currNote, title: newTitle}))
+        getNotes
+            .update(id, updatedNote)
+            .then(response => {
+                setNotes(notes.filter(note => id !== note.id).concat(updatedNote))
+            })
     }
 
     const noteContentStyle = {
