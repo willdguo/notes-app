@@ -21,12 +21,15 @@ function App() {
     const newNote = {
       title: `New Note`, 
       content: `What's up?`, 
-      /*id: newId */}
+      /*id: newId */
+    }
 
     getNotes
       .create(newNote)
       .then(response => {
         const newId = response.data.id
+        console.log(newId)
+        console.log(response)
         //console.log(newId)
         //console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
@@ -41,7 +44,6 @@ function App() {
 
   // to do: addNote button & div is different size than note div
   // to do: currently, most recently edited note is sent to the very front
-  //to do: fix Add new note
   return (
     <div>
 
