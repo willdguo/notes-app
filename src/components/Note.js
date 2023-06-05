@@ -67,13 +67,18 @@ const Note = ( { notes, setNotes, id }) => {
     }
 
     function deleteNote(id) {
+        //console.log("note.js: ")
+        //console.log(id)
         getNotes
             .remove(id)
             .then(response => {
-                setNotes(notes.filter(note => note.id !== id))
+                console.log('in delete:')
+                console.log(id)
+                setNotes(notes.filter(note => note.id != id))
                 console.log("note deleted")
             }).catch(error => {
                 console.log(error)
+                
             })
     }
 

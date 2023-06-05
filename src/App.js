@@ -30,8 +30,7 @@ function App() {
         const newId = response.data.id
         console.log(newId)
         console.log(response)
-        //console.log(newId)
-        //console.log("in create")
+        console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
       })
 
