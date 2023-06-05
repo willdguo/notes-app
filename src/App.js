@@ -27,11 +27,16 @@ function App() {
       .create(newNote)
       .then(response => {
         const newId = response.data.id
-        console.log(newId)
-        console.log("in create")
+        //console.log(newId)
+        //console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
       })
 
+    // getNotes
+    //   .remove(2)
+    //   .then(response => {
+    //     console.log("note deleteed")
+    //   })
   }
 
   // to do: addNote button & div is different size than note div
