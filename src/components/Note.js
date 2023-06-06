@@ -29,20 +29,31 @@ const Note = ( { notes, setNotes, id }) => {
         //console.log(`new content: ${newContent}`)
     
         const currNote = getById(id)
-        const updatedNote = {...currNote, content: newContent}
 
-        clearTimeout(contentTimer.current)
-        setNotes(notes.filter(note => note.id !== id).concat(updatedNote))
+        if(newContent.length >= currNote.content.length){
 
-        contentTimer.current = setTimeout(() => {
-            getNotes
-                .update(id, {...currNote, content: newContent})
-                .then(response => {
-                    console.log(`note ${id} content saved!`)
-            })
-        }, 3000)
+            const updatedNote = {...currNote, content: newContent}
 
-      }
+            clearTimeout(contentTimer.current)
+            setNotes(notes.filter(note => note.id !== id).concat(updatedNote))
+    
+            contentTimer.current = setTimeout(() => {
+                getNotes
+                    .update(id, {...currNote, content: newContent})
+                    .then(response => {
+                        console.log(`note ${id} content saved!`)
+                })
+            }, 3000)
+
+        }
+
+    }
+
+    function handlePaste(e) {
+        e.preventDefault()
+        const pastedText = e.clipboardData.getData('text/plain')
+        console.log(`you thought ${pastedText}`)
+    }
     
     function changeTitle(e) {
         const newTitle = e.target.value // ? e.target.value : `New Note ${id}` // empty titles should not be allowed
@@ -96,7 +107,7 @@ const Note = ( { notes, setNotes, id }) => {
 
         <div className = "note"> 
             <input id = "note-title" value = {getById(id).title} onChange = {changeTitle} />
-            <textarea id = 'note-content' style = {noteContentStyle}  value={getById(id).content} onChange={changeContent}/> 
+            <textarea id = 'note-content' style = {noteContentStyle}  value={getById(id).content} onChange={changeContent} onPaste = {handlePaste} /> 
             <button onClick = {() => deleteNote(id)}> X </button>
         </div>
 
