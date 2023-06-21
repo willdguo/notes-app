@@ -5,11 +5,13 @@ import getNotes from "./services/getNotes.js"
 function App() {
 
   const [notes, setNotes] = useState([{title: 'If you see this, something aint right', content: `Check to see if working: \n axios \n getById \n server`, id: "1"}])
+  const [filter, setFilter] = useState('')
   const [description, setDescription] = useState('')
   const finalDescription = "Built with React + Node + Render + MongoDB \nMade for Shay"
   const n = useRef(0)
   const t = useRef(300)
   const flickers = 6
+  const searchTimer = useRef(null)
 
   // loads notes upon window load
   useEffect(() => {
@@ -34,8 +36,8 @@ function App() {
       if(n.current < flickers){
         setDescription(['|','\u00A0'][n.current % 2])
       } else if (n.current - flickers <= finalDescription.length){
-        setDescription(finalDescription.substring(0, n.current - flickers))
-      } else if (n.current - 2 * flickers + 1 <= finalDescription.length) {
+        setDescription(finalDescription.substring(0, n.current - flickers) + ' \u00A0')
+      } else if (n.current - 2 * flickers <= finalDescription.length) {
         //console.log(n.current)
         setDescription(`${finalDescription} ${['|', '\u00A0'][n.current % 2]}`)
       }
@@ -53,12 +55,10 @@ function App() {
 
 
   function addNote() {
-    // const newId = Math.floor(Math.random() * 10e8) // later: let MongoDB take over the ID
 
     const newNote = {
       title: `New Note`, 
       content: `What's up?`, 
-      /*id: newId */
     }
 
     getNotes
@@ -70,12 +70,16 @@ function App() {
         console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
       })
+  }
 
-    // getNotes
-    //   .remove(2)
-    //   .then(response => {
-    //     console.log("note deleteed")
-    //   })
+  const handleFilter = (e) => {
+
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => {
+      setFilter(e.target.value.trim())
+      console.log(filter)
+    }, 500)
+    
   }
 
   // to do: addNote button & div is different size than note div
@@ -91,15 +95,22 @@ function App() {
       </div>
 
       <div className = "notes-filter">
-          <input className = "notes-filter-input" type = "text" placeholder = " Search " />
+          <input className = "notes-filter-input" type = "text" placeholder = " Search " onChange = {handleFilter}/>
       </div>
 
       <div className = "notes-container">
 
-        {notes.slice().reverse().map(note => (
-          <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
-        ))}
-
+        {filter.trim() 
+          ? notes.filter(note => (
+            note.title.toLowerCase().includes(filter.toLowerCase()) || 
+            note.content.toLowerCase().includes(filter.toLowerCase())
+            )).map(note => (
+              <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
+            ))
+          : notes.slice().reverse().map(note => (
+              <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
+            ))
+        }
 
         <div className = "addNote">
           <button id = "addNote-button" onClick={addNote}> <p id = "icon"> + </p> </button>
