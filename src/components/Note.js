@@ -4,7 +4,7 @@ import getNotes from "../services/getNotes"
 const Note = ( { notes, setNotes, id }) => {
 
     const contentTimer = useRef(null) // timer to keep track of content saves
-    const titleTimer = useRef(null)
+    const titleTimer = useRef(null) 
 
     function getById(id) {
 
@@ -30,29 +30,19 @@ const Note = ( { notes, setNotes, id }) => {
     
         const currNote = getById(id)
 
-        if(newContent.length >= currNote.content.length){
+        const updatedNote = {...currNote, content: newContent}
 
-            const updatedNote = {...currNote, content: newContent}
+        clearTimeout(contentTimer.current)
+        setNotes(notes.filter(note => note.id !== id).concat(updatedNote))
 
-            clearTimeout(contentTimer.current)
-            setNotes(notes.filter(note => note.id !== id).concat(updatedNote))
-    
-            contentTimer.current = setTimeout(() => {
-                getNotes
-                    .update(id, {...currNote, content: newContent})
-                    .then(response => {
-                        console.log(`note ${id} content saved!`)
-                })
-            }, 3000)
+        contentTimer.current = setTimeout(() => {
+            getNotes
+                .update(id, {...currNote, content: newContent})
+                .then(response => {
+                    console.log(`note ${id} content saved!`)
+            })
+        }, 3000)
 
-        }
-
-    }
-
-    function handlePaste(e) {
-        e.preventDefault()
-        const pastedText = e.clipboardData.getData('text/plain')
-        console.log(`you thought ${pastedText}`)
     }
     
     function changeTitle(e) {
@@ -85,29 +75,56 @@ const Note = ( { notes, setNotes, id }) => {
             .then(response => {
                 console.log('in delete:')
                 console.log(id)
-                setNotes(notes.filter(note => note.id != id))
+                setNotes(notes.filter(note => note.id !== id))
                 console.log("note deleted")
             }).catch(error => {
                 console.log(error)
-                
             })
     }
+
+    const noteColors = ['lightyellow', '#cfeaf7', '#e9e9e9', '#f5e8ff', '#e6e6fa', '#fed7d7']
+    let randColor = id.slice(-1).charCodeAt(0) % 6
 
     const noteContentStyle = {
         border: 'none',
         maxWidth: '100%',
         resize: 'vertical',
         minHeight: '300px',
-        backgroundColor: 'lightyellow',
+        backgroundColor: noteColors[randColor],
         padding: '5px',
-        fontSize: '16px',        
+        fontSize: '16px',
+        fontFamily: "'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif"      
+    }
+
+    const noteTitleStyle = {
+        border: 'none',
+        borderBottom: '1px solid darkgrey',
+        fontWeight: 'bold',
+        backgroundColor: noteColors[randColor],
+        marginBottom: '10px',
+        padding: '5px',
+        fontSize: '20px',
+        fontFamily: "'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif",
+    }
+
+    const noteStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'left',
+        backgroundColor: noteColors[randColor],
+        border: "1px solid black",
+        maxWidth: '30%',
+        minWidth: '30%',
+        margin: '10px',
+        height: '100%',
+        position: 'relative'
     }
 
     return (
 
-        <div className = "note"> 
-            <input id = "note-title" value = {getById(id).title} onChange = {changeTitle} />
-            <textarea id = 'note-content' style = {noteContentStyle}  value={getById(id).content} onChange={changeContent} onPaste = {handlePaste} /> 
+        <div className = "note" style = {noteStyle}> 
+            <input id = "note-title" style = {noteTitleStyle} value = {getById(id).title} onChange = {changeTitle} />
+            <textarea id = 'note-content' style = {noteContentStyle} value={getById(id).content} onChange={changeContent} /> 
             <button onClick = {() => deleteNote(id)}> X </button>
         </div>
 

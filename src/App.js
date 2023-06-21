@@ -4,9 +4,9 @@ import getNotes from "./services/getNotes.js"
 
 function App() {
 
-  const [notes, setNotes] = useState([{title: 'If you see this, something aint right', content: `Check to see if working: \n axios \n getById \n server`, id: 1}])
+  const [notes, setNotes] = useState([{title: 'If you see this, something aint right', content: `Check to see if working: \n axios \n getById \n server`, id: "1"}])
   const [description, setDescription] = useState('')
-  const finalDescription = "Built with React + Node + Render + MongoDB \nInspired by Shay"
+  const finalDescription = "Built with React + Node + Render + MongoDB \nMade for Shay"
   const n = useRef(0)
   const t = useRef(300)
   const flickers = 6
@@ -85,9 +85,13 @@ function App() {
 
       <div className = "intro">
 
-        <h1> NoDelete </h1>
+        <h1> Jot </h1>
         <p style={{ whiteSpace: 'pre-line' }}> <i> {description} </i> </p>
 
+      </div>
+
+      <div className = "notes-filter">
+          <input className = "notes-filter-input" type = "text" placeholder = " Search " />
       </div>
 
       <div className = "notes-container">
@@ -95,7 +99,7 @@ function App() {
         {notes.slice().reverse().map(note => (
           <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
         ))}
-        
+
 
         <div className = "addNote">
           <button id = "addNote-button" onClick={addNote}> <p id = "icon"> + </p> </button>
