@@ -30,18 +30,27 @@
         max-width: 100%;
       }
 
-      /* .note{
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        background-color: lightyellow;
-        border: 1px solid black;
-        max-width: 30%;
-        min-width: 30%;
-        margin: 10px;
-        height: 100%;
-        position: relative;
-      } */
+      .sort-button {
+        background-color: transparent;
+        color: #505555;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.1s ease;
+      }
+
+      .sort-button:hover {
+        background-color: #B3B3B3;
+      }
+
+      .sort-button.sorted {
+        background-color: #B3B3B3;
+      }
+
+      .sort-button.sorted:hover {
+        background-color: transparent;
+      }
 
       @media screen and (max-width: 600px) {
         .note {

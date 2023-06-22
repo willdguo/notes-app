@@ -12,6 +12,7 @@ function App() {
   const t = useRef(300)
   const flickers = 6
   const searchTimer = useRef(null)
+  const [sorted, setSorted] = useState(false)
 
   // loads notes upon window load
   useEffect(() => {
@@ -24,11 +25,10 @@ function App() {
   }, [])
 
 
-  // "write out" the intro description at the start
+  // simulation of "writing" the intro description at the start
   useEffect(() => {
     
     const timer = setTimeout(() => {
-      //console.log(n)
 
       n.current = n.current + 1
       t.current = n.current < flickers || n.current - flickers > finalDescription.length ? 450 : 60
@@ -44,11 +44,6 @@ function App() {
 
     }, t.current)
 
-    // if (n.current - 2 * flickers === finalDescription.length){
-    //   console.log("animation done")
-    //   clearTimeout(timer)
-    // }
-
     return () => clearTimeout(timer)
 
   }, [description])
@@ -58,7 +53,8 @@ function App() {
 
     const newNote = {
       title: `New Note`, 
-      content: `What's up?`, 
+      content: `What's up?`,
+      date_created: new Date(), 
     }
 
     getNotes
@@ -69,6 +65,9 @@ function App() {
         console.log(response)
         console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
+
+        console.log(response.data.date_created)
+        console.log(Date(response.data.date_created))
       })
   }
 
@@ -82,8 +81,16 @@ function App() {
     
   }
 
+  const toggleSort = () => {
+    setSorted(!sorted)
+
+  }
+
   // to do: addNote button & div is different size than note div
   // to do: currently, most recently edited note is sent to the very front
+  // prev: notes.slice().reverse().map(note => (
+  //   <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
+  //   ))
   return (
     <div>
 
@@ -96,6 +103,7 @@ function App() {
 
       <div className = "notes-filter">
           <input className = "notes-filter-input" type = "text" placeholder = " Search " onChange = {handleFilter}/>
+          <button className = {`sort-button ${sorted ? 'sorted' : ''}`} onClick = {toggleSort}> Sort </button>
       </div>
 
       <div className = "notes-container">
@@ -107,7 +115,7 @@ function App() {
             )).map(note => (
               <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
             ))
-          : notes.slice().reverse().map(note => (
+          : notes.slice().sort((a, b) => sorted ? new Date(a.date_created) - new Date(b.date_created) : -1).map(note => (
               <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
             ))
         }
