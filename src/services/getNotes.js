@@ -1,5 +1,5 @@
 import axios from "axios"
-const baseUrl = "/api/notes" // https://111-notesapp-backend.vercel.app
+const baseUrl = "https://111-notesapp-backend.vercel.app/api/notes" // https://111-notesapp-backend.vercel.app
 
 let token = null //current token used
 
