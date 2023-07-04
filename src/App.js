@@ -1,11 +1,14 @@
 import React, {useState, useEffect, useRef} from "react"
 import Note from './components/Note.js'
 import getNotes from "./services/getNotes.js"
+import Login from './components/Login.js'
 
 function App() {
 
   const [notes, setNotes] = useState([{title: 'If you see this, something aint right', content: `Check to see if working: \n axios \n getById \n server`, id: "1"}])
   const [filter, setFilter] = useState('')
+  const [user, setUser] = useState(null)
+
   const [description, setDescription] = useState('')
   const finalDescription = "Built with React + Node + Render + MongoDB \nMade for Shay"
   const n = useRef(0)
@@ -16,12 +19,18 @@ function App() {
 
   // loads notes upon window load
   useEffect(() => {
-    getNotes
-      .getAll()
+    getNotes.getAll()
       .then(response => {
         setNotes(response.data)
       })
-      
+
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    
+    if(loggedUserJSON) {
+      const saved = JSON.parse(loggedUserJSON)
+      setUser(saved)
+      getNotes.setToken(saved.token)
+    }
   }, [])
 
 
@@ -60,14 +69,16 @@ function App() {
     getNotes
       .create(newNote)
       .then(response => {
-        const newId = response.data.id
-        console.log(newId)
-        console.log(response)
-        console.log("in create")
+        // console.log("now resposne")
+        // console.log(response)
+        const newId = response.id
+        // console.log(newId)
+        // console.log(response)
+        // console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
 
-        console.log(response.data.date_created)
-        console.log(Date(response.data.date_created))
+        console.log(response.date_created)
+        console.log(Date(response.date_created))
       })
   }
 
@@ -83,23 +94,17 @@ function App() {
 
   const toggleSort = () => {
     setSorted(!sorted)
-
   }
 
-  // to do: addNote button & div is different size than note div
-  // to do: currently, most recently edited note is sent to the very front
-  // prev: notes.slice().reverse().map(note => (
-  //   <Note notes = {notes} setNotes = {setNotes} id = {note.id} key = {note.id}/>
-  //   ))
-  return (
+  const logout = () => {
+    setUser(null)
+    window.localStorage.clear()
+    console.log(window.localStorage)
+  }
+
+  const mainContainer = () => (
     <div>
-
-      <div className = "intro">
-
-        <h1> Jot </h1>
-        <p style={{ whiteSpace: 'pre-line' }}> <i> {description} </i> </p>
-
-      </div>
+      <button className = "logout" onClick = {logout}> Logout </button>
 
       <div className = "notes-filter">
           <input className = "notes-filter-input" type = "text" placeholder = " Search " onChange = {handleFilter}/>
@@ -125,6 +130,24 @@ function App() {
         </div>
 
       </div>
+    </div>
+  )
+
+  // to do: addNote button & div is different size than note div
+
+  return (
+    <div>
+
+      <div className = "intro">
+
+        <h1 onClick = {() => console.log(user)}> Jot </h1>
+        <p style={{ whiteSpace: 'pre-line' }}> <i> {description} </i> </p>
+
+      </div>
+
+      {user === null
+        ? <Login user = {user} setUser = {setUser}/>
+        : mainContainer() }
 
     </div>
   )

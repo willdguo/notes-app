@@ -68,6 +68,7 @@ const Note = ( { notes, setNotes, id }) => {
     }
 
     function deleteNote(id) {
+        console.log(id)
         //console.log("note.js: ")
         //console.log(id)
         getNotes
