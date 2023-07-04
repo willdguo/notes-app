@@ -19,18 +19,20 @@ function App() {
 
   // loads notes upon window load
   useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    
+    if(loggedUserJSON) {
+      const saved = JSON.parse(loggedUserJSON)
+      console.log(loggedUserJSON)
+      setUser(saved)
+      getNotes.setToken(saved.token)
+    }
+
     getNotes.getAll()
       .then(response => {
         setNotes(response.data)
       })
 
-    const loggedUserJSON = window.localStorage.getItem('loggedUser')
-    
-    if(loggedUserJSON) {
-      const saved = JSON.parse(loggedUserJSON)
-      setUser(saved)
-      getNotes.setToken(saved.token)
-    }
   }, [])
 
 
@@ -69,12 +71,7 @@ function App() {
     getNotes
       .create(newNote)
       .then(response => {
-        // console.log("now resposne")
-        // console.log(response)
         const newId = response.id
-        // console.log(newId)
-        // console.log(response)
-        // console.log("in create")
         setNotes(notes.concat({...newNote, id: newId}))
 
         console.log(response.date_created)

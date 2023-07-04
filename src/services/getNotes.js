@@ -8,7 +8,14 @@ const setToken = (newToken) => {
 }
 
 const getAll = () => {
-    return axios.get(baseUrl)
+    const config = {
+        headers: { Authorization: token }, 
+    }
+
+    console.log('new token: ')
+    console.log(token)
+
+    return axios.get(baseUrl, config)
 }
 
 const create = async (newObject) => {
@@ -16,8 +23,8 @@ const create = async (newObject) => {
         headers: { Authorization: token }, 
     }
     
-    console.log(token)
-    console.log(config)
+    // console.log(token)
+    // console.log(config)
 
     const response = await axios.post(baseUrl, newObject, config)
     console.log('response data: ')
@@ -35,8 +42,8 @@ const remove = async (id) => {
         headers: {Authorization: token}, 
     }
 
-    console.log(token)
-    console.log(config)
+    // console.log(token)
+    // console.log(config)
 
     const response = await axios.delete(`${baseUrl}/${id}`, config)
     return response.data
